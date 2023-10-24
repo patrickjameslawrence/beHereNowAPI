@@ -1,0 +1,7 @@
+{
+  "_id": { "$oid": "653428fd86e457502bb71f27" },
+  "name": "Patrick Lawrence",
+  "accountCreated": { "$date": { "$numberLong": "-62072524800000" } },
+  "username": "patricklawrence",
+  "isPrivate": false
+}
