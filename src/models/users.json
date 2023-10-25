@@ -1,7 +1,12 @@
 {
-  "_id": { "$oid": "653428fd86e457502bb71f27" },
+  "_id": { "$oid": "65389796f29ced616c065ab4" },
   "name": "Patrick Lawrence",
-  "accountCreated": { "$date": { "$numberLong": "-62072524800000" } },
   "username": "patricklawrence",
+  "email": "patrickjameslawrence@icloud.com",
+  "password": "6kOX21*N",
+  "city": "West Chester",
+  "state": "Pennsylvania",
+  "country": "United States",
+  "accountCreated": { "$numberDouble": "-62072524800000.0" },
   "isPrivate": false
 }
