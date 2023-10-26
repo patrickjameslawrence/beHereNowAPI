@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const { ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken')
 
 const corsOptions = {
   origin: 'http://localhost:9000',
@@ -44,8 +45,8 @@ app.post(process.env.BASE_API_URL + "posts", async (req, res) => {
 app.post(process.env.BASE_API_URL + "users/sign-up", async (req, res) => {
   var user = req.body;
   user.username = user.username.toLowerCase()
+  user.email = user.email.toLowerCase()
 
-  console.log(user);
   let tempUser = await users.findOne({ email: user.email });
   if (tempUser) {
     res.statusCode = 409
@@ -65,6 +66,72 @@ app.post(process.env.BASE_API_URL + "users/sign-up", async (req, res) => {
   };
 
   users.insertOne(user);
+});
+
+app.post(process.env.BASE_API_URL + "users/login", async (req, res) => {
+  var credentials = req.body;
+
+  if (credentials.token) {
+    const decodedToken = jwt.verify(credentials.token, process.env.JWT_SECRET)
+
+    if (decodedToken._id 
+      && decodedToken.name
+      && decodedToken.email
+      && decodedToken.username
+      ) {
+      const token = jwt.sign({
+        _id: decodedToken._id,
+        name: decodedToken.name,
+        email: decodedToken.email,
+        username: decodedToken.username,
+      }, process.env.JWT_SECRET, {
+        expiresIn: "48hr"
+      })
+
+
+      const tempUser = {
+        _id: decodedToken._id,
+        name: decodedToken.name,
+        email: decodedToken.email,
+        username: decodedToken.username,
+        token: token
+      }
+
+      return res.json(tempUser)
+    } else {
+      res.statusCode = 498
+      return res.send("Invalid token")
+    }
+  }
+
+  credentials.email = credentials.email.toLowerCase()
+
+  let user = await users.findOne({ email: credentials.email });
+  if (user) {
+    if (user.password !== credentials.password) {
+      res.statusCode = 401
+      return res.send("Invalid username or password")
+    }
+  }
+
+  const token = jwt.sign({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    username: user.username,
+  }, process.env.JWT_SECRET, {
+    expiresIn: "48hr"
+  })
+
+  const tempUser = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    token: token
+  };
+
+  res.json(tempUser)
 });
 
 app.listen(process.env.PORT, () => {
