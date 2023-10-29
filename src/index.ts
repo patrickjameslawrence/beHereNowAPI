@@ -6,12 +6,17 @@ import posts from "./routes/posts";
 import users from "./routes/users";
 
 const app = express();
-app.use(process.env.BASE_API_URL + "posts", posts);
-app.use(process.env.BASE_API_URL + "users", users);
+if (!process.env.BASE_API_URL || !process.env.npm_package_version) {
+  throw new Error("Cannot form API url")
+}
+
+const apiUrl = process.env.BASE_API_URL + process.env.npm + "/"
+app.use(apiUrl + "posts", posts);
+app.use(apiUrl + "users", users);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.listen(process.env.PORT, () => {
-  console.log("Ready");
+  console.log("BeHereNow API v-" + process.env.npm_package_version + " ready. Allowing " + process.env.NODE_ENV + " origins");
 });

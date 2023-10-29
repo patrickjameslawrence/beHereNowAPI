@@ -1,7 +1,5 @@
-import mongodb from "mongodb";
+import { ObjectId } from "mongodb";
 import { Countries } from "./lib/globals";
-
-const ObjectId = mongodb.ObjectId;
 
 type Post = {
   _id: ObjectId;
