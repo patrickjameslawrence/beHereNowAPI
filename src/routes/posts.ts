@@ -9,7 +9,7 @@ const { collections } = require("../config/database.config");
 
 router.use(
   cors({
-    origin: process.env.NODE_ENV = "development" ? "http://localhost:8000" : process.env.APP_URL,
+    origin: process.env.NODE_ENV === "development" ? "http://localhost:8000" : process.env.APP_URL,
     methods: [ 'GET' ]
   }),
 );
