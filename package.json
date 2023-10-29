@@ -16,6 +16,10 @@
     "clean": "rm ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickjameslawrence/beHereNowAPI.git"
+  },
   "dependencies": {
     "body-parser": "^1.20.2",
     "bson": "^6.2.0",
@@ -26,6 +30,7 @@
     "mongodb": "^6.2.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.20",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"

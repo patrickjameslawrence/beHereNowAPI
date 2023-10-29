@@ -1,9 +1,18 @@
 const express = require("express");
+const cors = require("cors")
 const router = express.Router();
 const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 const { collections } = require("../config/database.config");
+
+router.use(
+  cors({
+    origin: process.env.NODE_ENV = "development" ? "http://localhost:8000" : process.env.APP_URL,
+    methods: [ 'GET' ]
+  }),
+);
+
 
 router.post(
   process.env.BASE_API_URL + "users/signup",
