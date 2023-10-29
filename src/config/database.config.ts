@@ -3,12 +3,15 @@ require("dotenv").config();
 
 const mongoClient = new MongoClient(process.env.MONGO_DB_URI);
 
-var connection;
-try {
-  connection = mongoClient.connect();
-} catch (e) {
-  console.error(e);
+async function connect() {
+  try {
+    return await mongoClient.connect();
+  } catch (e) {
+    console.error(e);
+  }
 }
+
+const connection = connect();
 
 var db;
 try {
