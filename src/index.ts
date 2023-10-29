@@ -13,5 +13,5 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.listen(process.env.PORT, () => {
-  console.log(`Ready.`);
+  console.log("Ready");
 });
