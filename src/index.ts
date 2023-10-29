@@ -13,7 +13,7 @@ import users from "./routes/users";
 
 const app = express();
 app.use(posts);
-app.use(users);
+app.use(users)
 
 // app.use(cors(corsOptions));
 app.use(cors());
@@ -21,5 +21,5 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.listen(process.env.PORT, () => {
-  console.log(`App running on port ${process.env.PORT}`);
+  console.log(`Ready.`);
 });
