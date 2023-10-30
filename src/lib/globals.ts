@@ -1,10 +1,15 @@
-const enum Countries {
+export const CORSOptions = {
+  origin: process.env.NODE_ENV === 'production' ? process.env.APP_URL : 'http://localhost:8000',
+  methods: ['GET'],
+}
+
+export const enum Countries {
   UnitedStates = 'United States',
   Mexico = 'Mexico',
   Canada = 'Canada',
 }
 
-const enum StatesAndProvinces {
+export const enum StatesAndProvinces {
   // United States
   Alabama = 'Alabama',
   Alaska = 'Alaska',
