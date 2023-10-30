@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { Countries } from './lib/globals'
+import { Countries, StatesAndProvinces } from './lib/globals'
 
 type Post = {
   _id: ObjectId
@@ -24,7 +24,6 @@ type User = {
   stateOrProvince?: StatesAndProvinces
   country?: Countries
 }
-
 type Credentials = {
   username: string
   email: string

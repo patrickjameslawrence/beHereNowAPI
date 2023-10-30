@@ -1,18 +1,15 @@
 import { Post } from '../types'
 import { Request, Response } from 'express'
 
+import { CORSOptions } from '../lib/globals'
+
 const express = require('express')
 const cors = require('cors')
 const router = express.Router()
 
 const { collections } = require('../config/database.config')
 
-router.use(
-  cors({
-    origin: process.env.NODE_ENV === 'production' ? process.env.APP_URL : 'http://localhost:8000',
-    methods: ['GET'],
-  }),
-)
+router.use(cors(CORSOptions))
 
 router.get('/', (req: Request, res: Response) => {
   req
