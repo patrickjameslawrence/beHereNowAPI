@@ -1,33 +1,30 @@
-import { Post } from "../types";
-import { Request, Response } from "express";
+import { Post } from '../types'
+import { Request, Response } from 'express'
 
-const express = require("express");
-const cors = require("cors");
-const router = express.Router();
+const express = require('express')
+const cors = require('cors')
+const router = express.Router()
 
-const { collections } = require("../config/database.config");
+const { collections } = require('../config/database.config')
 
 router.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? process.env.APP_URL
-        : "http://localhost:8000",
-    methods: ["GET"],
+    origin: process.env.NODE_ENV === 'production' ? process.env.APP_URL : 'http://localhost:8000',
+    methods: ['GET'],
   }),
-);
+)
 
-router.get("/", (req: Request, res: Response) => {
-  req;
+router.get('/', (req: Request, res: Response) => {
+  req
   collections.posts
     .find()
     .limit(50)
     .toArray()
     .then((posts: Post) => {
-      res.json(posts);
+      res.json(posts)
     })
-    .catch((e: Error) => console.error(e));
-});
+    .catch((e: Error) => console.error(e))
+})
 
 // router.post("/", async (req: Request) => {
 //   const post = req.body;
@@ -43,4 +40,4 @@ router.get("/", (req: Request, res: Response) => {
 //   collections.posts.insertOne(post);
 // });
 
-export default router;
+export default router
