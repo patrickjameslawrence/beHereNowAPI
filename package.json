@@ -11,7 +11,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node ./dist/index.js",
-    "develop": "tsc --watch & NODE_ENV=development nodemon ./dist/index.js",
+    "dev": "tsc --watch & NODE_ENV=development nodemon ./dist/index.js",
     "build": "tsc",
     "clean": "rm ./dist",
     "format": "prettier . --write",
