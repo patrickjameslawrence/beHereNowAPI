@@ -12,7 +12,7 @@ import users from './routes/users'
 
 const app = express()
 
-if (!process.env.BASE_API_URL || !npmPackage.version) {
+if (process.env.BASE_API_URL === 'undefined' || npmPackage.version === 'undefined') {
   throw new Error('Cannot form API url')
 }
 

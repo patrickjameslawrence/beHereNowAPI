@@ -9,7 +9,7 @@ const { collections } = require('../config/database.config')
 
 router.use(cors(CORSOptions))
 
-router.post(process.env.BASE_API_URL + '/signup', async (req: any, res: any) => {
+router.post(process.env.BASE_API_URL + '/create-account', async (req: any, res: any) => {
   var user = req.body
   user.username = user.username.toLowerCase()
   user.email = user.email.toLowerCase()
@@ -35,7 +35,8 @@ router.post(process.env.BASE_API_URL + '/signup', async (req: any, res: any) => 
   collections.users.insertOne(user)
 })
 
-router.post(process.env.BASE_API_URL + '/login', async (req: any, res: any) => {
+router.post(process.env.BASE_API_URL + '/log-in', async (req: any, res: any) => {
+  console.log(req)
   var credentials = req.body
 
   if (credentials.token) {
@@ -51,7 +52,7 @@ router.post(process.env.BASE_API_URL + '/login', async (req: any, res: any) => {
         },
         process.env.JWT_SECRET,
         {
-          expiresIn: '48hr',
+          expiresIn: '7d',
         },
       )
 
