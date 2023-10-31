@@ -4,9 +4,13 @@ import { Countries, StatesAndProvinces } from './lib/globals'
 type Post = {
   _id: ObjectId
   author: User
-  content: string
+  content: Content
   location: Location
   timestamp: Date
+}
+type Content = {
+  text: string
+  location: Location
 }
 type Location = {
   isUsing: boolean
