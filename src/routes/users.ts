@@ -1,108 +1,110 @@
+import { Request, Response } from 'express'
+
 const express = require('express')
 const cors = require('cors')
+
 const router = express.Router()
 const { ObjectId } = require('mongodb')
-const jwt = require('jsonwebtoken')
 
 const { CORSOptions } = require('../lib/globals')
 const { collections } = require('../config/database.config')
 
 router.use(cors(CORSOptions))
 
-router.post(process.env.BASE_API_URL + '/create-account', async (req: any, res: any) => {
-  var user = req.body
-  user.username = user.username.toLowerCase()
-  user.email = user.email.toLowerCase()
+router.post('/create_account', async (req: Request, res: Response) => {
+  var body = req.body
+  body.username = body.credentials.username.toLowerCase()
+  body.email = body.credentials.email.toLowerCase()
 
-  let tempUser = await collections.users.findOne({ email: user.email })
-  if (tempUser) {
+  let storedUser = await collections.users.findOne({ email: body.email })
+  if (storedUser) {
     res.statusCode = 409
-    return res.send('An account is already linked to this email')
+    res.statusMessage = 'An account is already linked to this email'
+    return res.send()
   }
-  tempUser = await collections.users.findOne({ username: user.username })
-  if (tempUser) {
+  storedUser = await collections.users.findOne({ username: body.username })
+  if (storedUser !== null) {
     res.statusCode = 409
-    return res.send('Username has been taken')
+    res.statusMessage = "This username isn't available"
+    return res.send()
   }
 
-  user = {
+  const date = new Date()
+
+  body = {
     _id: new ObjectId(),
-    accountCreated: new Date().getTime(),
+    accountCreated: date,
+    accountUpdated: date,
     isPrivate: false,
-    ...user,
+    credentials: {
+      isConfirmed: false,
+    },
+    ...body,
   }
 
-  collections.users.insertOne(user)
+  collections.users.insertOne(body)
+  return res.send(200)
 })
 
-router.post(process.env.BASE_API_URL + '/log-in', async (req: any, res: any) => {
-  console.log(req)
-  var credentials = req.body
+router.post('/confirm_email', async (req: Request, res: Response) => {
+  var body = req.body
+  body.email = body.email.toLowerCase()
 
-  if (credentials.token) {
-    const decodedToken = jwt.verify(credentials.token, process.env.JWT_SECRET)
-
-    if (decodedToken._id && decodedToken.name && decodedToken.email && decodedToken.username) {
-      const token = jwt.sign(
-        {
-          _id: decodedToken._id,
-          name: decodedToken.name,
-          email: decodedToken.email,
-          username: decodedToken.username,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: '7d',
-        },
-      )
-
-      const tempUser = {
-        _id: decodedToken._id,
-        name: decodedToken.name,
-        email: decodedToken.email,
-        username: decodedToken.username,
-        token: token,
-      }
-
-      return res.json(tempUser)
-    } else {
-      res.statusCode = 498
-      return res.send('Invalid token')
-    }
-  }
-
-  credentials.email = credentials.email.toLowerCase()
-
-  let user = await collections.users.findOne({ email: credentials.email })
-  if (user) {
-    if (user.password !== credentials.password) {
-      res.statusCode = 401
-      return res.send('Invalid username or password')
-    }
-  }
-
-  const token = jwt.sign(
-    {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      username: user.username,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: '48hr',
-    },
+  await collections.users.updateOne(
+    { email: body.email },
+    { $set: { goTrueId: body.goTrueId, 'credentials.isConfirmed': true } },
   )
+  return res.send(200)
+})
 
-  const tempUser = {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    username: user.username,
-    token: token,
+router.post('/accept_invite', async (req: Request, res: Response) => {
+  var body = req.body
+  body.username = body.credentials.username.toLowerCase()
+  body.email = body.credentials.email.toLowerCase()
+
+  let storedUser = await collections.users.findOne({ email: body.email })
+  if (storedUser) {
+    res.statusCode = 409
+    res.statusMessage = 'An account is already linked to this email'
+    return res.send()
+  }
+  storedUser = await collections.users.findOne({ username: body.username })
+  if (storedUser !== null) {
+    res.statusCode = 409
+    res.statusMessage = "This username isn't available"
+    return res.send()
   }
 
-  res.json(tempUser)
+  const date = new Date()
+
+  body = {
+    _id: new ObjectId(),
+    accountCreated: date,
+    accountUpdated: date,
+    isPrivate: false,
+    credentials: {
+      isConfirmed: false,
+    },
+    ...body,
+  }
+
+  collections.users.insertOne(body)
+  return res.send(200)
+})
+
+router.post('/accept_invite/set_goTrue_id', async (req: Request, res: Response) => {
+  var body = req.body
+  body.email = body.email.toLowerCase()
+
+  let storedUser = await collections.users.findOne({ email: body.email })
+  if (storedUser) {
+    await collections.users.updateOne(
+      { email: body.email },
+      { $set: { goTrueId: body.goTrueId, 'credentials.isConfirmed': true } },
+    )
+    return res.send(200)
+  }
+  return res.send(500)
 })
 
 export default router
