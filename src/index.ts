@@ -17,13 +17,14 @@ if (process.env.BASE_API_URL === 'undefined' || npmPackage.version === 'undefine
 }
 
 const apiUrl = process.env.BASE_API_URL + '/v' + npmPackage.version
-app.use(apiUrl + '/posts', posts)
-app.use(apiUrl + '/users', users)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(cors(CORSOptions))
+
+app.use(apiUrl + '/posts', posts)
+app.use(apiUrl + '/users', users)
 
 app.listen(process.env.PORT, () => {
   console.log(

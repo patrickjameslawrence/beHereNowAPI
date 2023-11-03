@@ -5,6 +5,7 @@ type Post = {
   _id: ObjectId
   author: {
     _id: ObjectId
+    name: string
     credentials: Credentials
   }
   content: Content
@@ -23,21 +24,28 @@ type Location = {
 
 type User = {
   _id: ObjectId
+  goTrueId?: string
   accountCreated: Date
-  accountUpdated?: Date
+  accountUpdated: Date
   isPrivate: boolean
   name: string
   credentials: Credentials
   city?: string
   stateOrProvince?: StatesAndProvinces
   country?: Countries
+  posts: {
+    authored?: Post[]
+    liked?: Post[]
+    reposted?: Post[]
+    bookmarked?: Post[]
+  }
   blocked?: {
     users: ObjectId[]
     posts: ObjectId[]
   }
 }
 type Credentials = {
-  netlifyId: string
   username: string
   email: string
+  isConfirmed: boolean
 }
